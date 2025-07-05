@@ -41,3 +41,8 @@ model Chat{
   seen  Boolean  @default(false)
 
 }
+
+model MyContacts {
+  id String @default(uuid()) @id
+  
+}

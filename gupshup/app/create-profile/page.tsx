@@ -7,7 +7,11 @@ function Profile() {
   const { data: session } = useSession();
   return (
     <div>
-      <CreateProfile email={session?.user?.email!} />
+      <CreateProfile
+        email={session?.user?.email!}
+        image={session?.user?.image!}
+        name={session?.user?.name!}
+      />
     </div>
   );
 }
