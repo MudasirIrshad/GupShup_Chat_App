@@ -3,29 +3,16 @@ import Navbar from "@/components/Navbar";
 import SignIn from "@/components/sign-in";
 import { useSession } from "next-auth/react";
 import SideBar from "./SideBar";
-export default function HomePage() {
+import { MyContacts } from "@/lib/generated/prisma/client";
+import { useRouter } from "next/navigation";
+
+interface HomePageProps {
+  myContacts: MyContacts[];
+}
+export default function HomePage({ myContacts }: HomePageProps) {
   const { data: session } = useSession();
 
+  const router = useRouter();
   if (!session) return <SignIn />;
-
-  return (
-    <div>
-      <div>
-        {session && (
-          <>
-            <div>
-              <div className="">
-                <Navbar />
-              </div>
-              <div className="flex">
-                <div className="h-[53.3rem] w-[450px] bg-black">
-                  <SideBar />
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
+  if (session) router.push("/HomePage");
 }

@@ -1,10 +1,14 @@
 import Navbar from "@/components/Navbar";
-import SideBar from "@/components/SideBar";
-import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import SideBar from "../HomePage/_components/SideBar";
+import SignIn from "@/components/sign-in";
+import DisplayMessage from "./_components/DisplayMessage";
 
-export default async function Settings() {
+export default async function HomePage() {
   const session = await auth();
+
+  if (!session) return <SignIn />;
 
   const contactOwner = await prisma.user.findUnique({
     where: {
@@ -14,6 +18,7 @@ export default async function Settings() {
   const myContacts = await prisma.myContacts.findMany({
     where: {
       ownerId: contactOwner?.id,
+      isContactRegistered: true,
     },
   });
 
@@ -24,9 +29,11 @@ export default async function Settings() {
       </div>
       <div className="flex">
         <div className="h-[53.3rem] w-[450px] bg-black">
-          <SideBar myContacts={myContacts} />
+          <SideBar myContacts={myContacts} contactOwnerId={contactOwner?.id!} />
         </div>
-        <div className="w-screen">Settings</div>
+        <div className="w-screen flex justify-center items-center">
+          <DisplayMessage />
+        </div>
       </div>
     </div>
   );

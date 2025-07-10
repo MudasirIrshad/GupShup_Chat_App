@@ -24,7 +24,7 @@ function CreateProfile({ email, image, name }: CreateProfileProps) {
       })
       .then(() => {
         toast.success("Welcome " + name);
-        router.push("/");
+        router.push("/HomePage");
       })
       .catch((err) => {
         toast.error(err);

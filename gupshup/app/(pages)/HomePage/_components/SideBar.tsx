@@ -2,16 +2,17 @@
 import Link from "next/link";
 import React from "react";
 import { Contact2Icon, MessageCircleMore, SettingsIcon } from "lucide-react";
-import { Avatar, AvatarImage } from "./ui/avatar";
 import { useSession } from "next-auth/react";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { MyContacts } from "@/lib/generated/prisma/client";
-import MyContactsChat from "./MyContactsChat";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import MyContactList from "../../../../components/MyContactList";
 
 interface SideBarProps {
   myContacts: MyContacts[];
+  contactOwnerId: string;
 }
-export default function SideBar({ myContacts }: SideBarProps) {
+export default function SideBar({ myContacts, contactOwnerId }: SideBarProps) {
   const { data: session } = useSession();
 
   const routes = [
@@ -48,8 +49,8 @@ export default function SideBar({ myContacts }: SideBarProps) {
           </div>
         ))}
       </div>
-      <div className="p-2">
-        <MyContactsChat myContacts={myContacts} />
+      <div className="p-2 w-full ">
+        <MyContactList myContacts={myContacts} />
       </div>
     </div>
   );
