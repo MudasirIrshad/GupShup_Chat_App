@@ -39,7 +39,6 @@ model Chat{
   receiver User? @relation("ReceivedMessages",fields: [receiverId],references: [id])
 
   createdAt DateTime @default(now())
-  
   updatedAt DateTime @updatedAt
 
   seen  Boolean  @default(false)
