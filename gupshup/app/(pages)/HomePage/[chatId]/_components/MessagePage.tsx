@@ -10,7 +10,6 @@ export default function MessagePage({
   senderId,
 }: MessagePageProps) {
   return (
-    
     <div className="flex flex-col justify-between h-full p-5">
       <div className="overflow-y-scroll">All the chats will be shown here</div>
       <div>
