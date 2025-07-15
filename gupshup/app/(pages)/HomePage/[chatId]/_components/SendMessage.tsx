@@ -60,6 +60,7 @@ export default function SendMessage({ receiverId, senderId }: SendMessageProp) {
         },
       ]);
     };
+
     socket.on("chat message", handleMessages);
     return () => {
       socket.off("chat message", handleMessages);
@@ -68,7 +69,6 @@ export default function SendMessage({ receiverId, senderId }: SendMessageProp) {
   return (
     <div>
       <div>
-        <p>Status: {isConnected ? "connected" : "disconnected"}</p>
         <div>
           <div className="bg-slate-700 p-4 border-t border-slate-600 flex items-center gap-2 rounded-2xl shadow-sm shadow-gray-500">
             <Input

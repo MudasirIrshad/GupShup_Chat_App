@@ -29,6 +29,12 @@ app.prepare().then(() => {
           throw new Error("Missing required fields");
         }
 
+        console.log(
+          data.content,
+          `This is senderId: ${data.senderId}`,
+          `THis is receiver Id: ${data.receiverId}`
+        );
+
         // Verify users exist
         const usersExist = await prisma.user.findMany({
           where: {
@@ -37,31 +43,31 @@ app.prepare().then(() => {
           select: { id: true },
         });
 
-        const receiverIdDatafromMyContacts = await prisma.myContacts.findUnique(
-          {
-            where: {
-              id: data.receiverId,
-            },
-          }
-        );
+        if (usersExist.length !== 2) {
+          throw new Error("Sender or receiver not found");
+        }
 
-        const receiverIdinUserTable = await prisma.user.findUnique({
+        const receiverGmail = await prisma.user.findUnique({
           where: {
-            email: receiverIdDatafromMyContacts?.contactGmail!,
+            id: data.receiverId,
           },
         });
 
-        // if (usersExist.length !== 2) {
-        //   throw new Error("Sender or receiver not found");
-        // }
-        console.log(receiverIdinUserTable);
+        const receiverIdInMycontacts = await prisma.myContacts.findUnique({
+          where: {
+            ownerId_contactGmail: {
+              ownerId: data.senderId,
+              contactGmail: receiverGmail?.email!,
+            },
+          },
+        });
 
-        // Create message
+        // // Create message
         const message = await prisma.chat.create({
           data: {
             content: data.content,
             senderId: data.senderId,
-            receiverId: receiverIdinUserTable?.id,
+            receiverId: data.receiverId,
             direction: "OUTGOING",
             seen: false,
           },
@@ -83,6 +89,7 @@ app.prepare().then(() => {
 
         // Broadcast to specific room (receiverId) instead of all clients
         io.to(data.receiverId).emit("new message", message);
+        io.to(data.senderId).emit("new message", message);
         socket.emit("message sent", message);
       } catch (error) {
         console.error("Error:", error);

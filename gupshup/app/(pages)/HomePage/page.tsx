@@ -20,11 +20,7 @@ export default async function HomePage() {
       ownerId: contactOwner?.id,
       isContactRegistered: true,
     },
-    include: {
-      
-    },
   });
-  
 
   return (
     <div>
